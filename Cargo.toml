@@ -8,5 +8,10 @@ edition = "2021"
 name = "quadtree"
 crate-type = ["cdylib"]
 
+[profile.release]
+lto = true
+debug = true
+opt-level = 2
+
 [dependencies]
 pyo3 = "0.18.1"
