@@ -1,3 +1,5 @@
+use std::vec;
+
 use pyo3::prelude::*;
 
 #[pyclass]
@@ -213,7 +215,7 @@ impl QuadTree {
 
     }
 
-    fn query(&self, boundary: &Rect) -> Vec<Point> {
+    fn query_rect(&self, boundary: &Rect) -> Vec<Point> {
         if !self.boundary.intersects(&boundary) {
             vec![]
         } else {
@@ -224,21 +226,54 @@ impl QuadTree {
             
             if self.divided {
                 if let Some(north_east) = &self.north_east {
-                    result.append(&mut north_east.query(boundary))
+                    result.append(&mut north_east.query_rect(boundary))
                 }
 
                 if let Some(north_west) = &self.north_west {
-                    result.append(&mut north_west.query(boundary))
+                    result.append(&mut north_west.query_rect(boundary))
                 }
 
                 if let Some(south_east) = &self.south_east {
-                    result.append(&mut south_east.query(boundary))
+                    result.append(&mut south_east.query_rect(boundary))
                 }
 
                 if let Some(south_west) = &self.south_west {
-                    result.append(&mut south_west.query(boundary))
+                    result.append(&mut south_west.query_rect(boundary))
                 }
             }
+
+            result
+        }
+    }
+
+    fn query_radius(&self, center_x: f32, center_y: f32, radius: f32) -> Vec<Point> {
+        let boundary = Rect::__new__(center_x, center_y, 2.*radius, 2.*radius);
+        let center_point = Point::__new__(center_x, center_y, None);
+
+        if !self.boundary.intersects(&boundary) {
+            vec![]
+        } else {
+            let mut result: Vec<Point> =
+                self.points.clone().into_iter()
+                .filter(|p| boundary.contains(p))
+                .filter(|p| p.distance_to(&center_point) < radius)
+                .collect();
+
+                if let Some(north_east) = &self.north_east {
+                    result.append(&mut north_east.query_radius(center_x, center_y, radius))
+                }
+
+                if let Some(north_west) = &self.north_west {
+                    result.append(&mut north_west.query_radius(center_x, center_y, radius))
+                }
+
+                if let Some(south_east) = &self.south_east {
+                    result.append(&mut south_east.query_radius(center_x, center_y, radius))
+                }
+
+                if let Some(south_west) = &self.south_west {
+                    result.append(&mut south_west.query_radius(center_x, center_y, radius))
+                }
 
             result
         }

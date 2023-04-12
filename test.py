@@ -1,4 +1,4 @@
-from quadtree import *
+import quadtree
 import numpy as np
 import time
 
@@ -6,7 +6,7 @@ points = np.random.random((70000, 2))
 
 t0 = time.time()
 
-boundary = Rect(0, 0, 360, 180)
+boundary = quadtree.Rect(0, 0, 360, 180)
 qt = QuadTree(
     boundary,
     100,
@@ -18,7 +18,7 @@ for x, y in points:
     x -= 2.5
     y *= 5
     y -= 2.5
-    point = Point(x, y)
+    point = quadtree.Point(x, y)
     qt.insert(point)
 
 len(qt)
