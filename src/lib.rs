@@ -211,8 +211,6 @@ impl QuadTree {
         || self.north_west.as_mut().unwrap().insert(point.clone())
         || self.south_east.as_mut().unwrap().insert(point.clone())
         || self.south_west.as_mut().unwrap().insert(point.clone())
-
-
     }
 
     fn query_rect(&self, boundary: &Rect) -> Vec<Point> {
