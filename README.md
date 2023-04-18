@@ -40,3 +40,9 @@ print(result)  # Output: [Point(x=10.0, y=10.0), Point(x=20.0, y=20.0)]
 result = quadtree.query_radius(0, 0, 20.0)
 print(result) # Output: [Point(x=10.0, y=10.0)]
 ```
+
+Data can be attached to each point, e.g.:
+```
+p1 = Point(10.0, 5.0, data=1)
+p2 = Point(10.0, 10.0, data="any Python object")
+```
